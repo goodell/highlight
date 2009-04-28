@@ -1,0 +1,84 @@
+#!/usr/bin/env perl
+# vim: set tw=72 :
+#
+# A simple filter program to decorate patterns with ANSI escape sequences.
+# See the bottom of this file for license information (MIT License).
+#
+# Author: Dave Goodell <davidjgoodell@gmail.com>
+
+use strict;
+use warnings;
+
+use Data::Dumper;
+use Term::ANSIColor qw( colored );
+use Getopt::Long;
+
+my $VERSION = "0.2";
+
+my $color = "bold red";
+
+GetOptions(
+    "color=s" => \$color,
+    "help"    => \&print_usage_and_exit,
+) or die "unable to parse options, stopped";
+
+local $| = 1;
+
+if (scalar(@ARGV) != 1) {
+    print_usage();
+    die "must pass a pattern, stopped";
+}
+
+my $pattern = $ARGV[0];
+
+while (my $line = <STDIN>) {
+    # sufficiently fancy values of $pattern might break this
+    while ($line =~ s/^(.*?)($pattern)(.*?)/$3/) {
+            print $1 . colored($2, $color);
+    }
+    print $line;
+}
+
+##########################################################################
+
+sub print_usage {
+    print<<EOT;
+Usage: $0 [--color=COLOR_STRING] <PATTERN>
+
+This is highlight version $VERSION.
+
+This program takes text via standard input and outputs it with the given
+perlre(1) pattern highlighted with the given color.  If no color is
+specified, it defaults to '$color'.  Colors may be anything that
+Perl's Term::ANSIColor understands.  This program is similar to "grep
+--color PATTERN" except both matching and non-matching lines are
+printed.
+EOT
+}
+sub print_usage_and_exit {
+    print_usage();
+    exit 0;
+}
+
+# Copyright (c) 2009 Dave Goodell
+#
+# Permission is hereby granted, free of charge, to any person
+# obtaining a copy of this software and associated documentation
+# files (the "Software"), to deal in the Software without
+# restriction, including without limitation the rights to use,
+# copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following
+# conditions:
+#
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+# HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
