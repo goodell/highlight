@@ -33,8 +33,12 @@ my $pattern = $ARGV[0];
 
 while (my $line = <STDIN>) {
     # sufficiently fancy values of $pattern might break this
-    while ($line =~ s/^(.*?)($pattern)(.*?)/$3/) {
-            print $1 . colored($2, $color);
+    while ($line =~ m/$pattern/) {
+        # $` - everything before the match
+        # $& - the matched text
+        # $' - everything after the match
+        print $` . colored($&, $color);
+        $line = $';
     }
     print $line;
 }
