@@ -13,11 +13,13 @@ use Data::Dumper;
 use Term::ANSIColor qw( colored );
 use Getopt::Long;
 
-my $VERSION = "0.2";
+my $VERSION = "0.3";
 
 my $color = "bold red";
+my $ignore_case = 0;
 
 GetOptions(
+    "i|ignore-case" => \$ignore_case,
     "color=s" => \$color,
     "help"    => \&print_usage_and_exit,
 ) or die "unable to parse options, stopped";
@@ -30,10 +32,12 @@ if (scalar(@ARGV) != 1) {
 }
 
 my $pattern = $ARGV[0];
+if ($ignore_case) { $pattern = qr/$pattern/oi; }
+else              { $pattern = qr/$pattern/o; }
 
 while (my $line = <STDIN>) {
     # sufficiently fancy values of $pattern might break this
-    while ($line =~ m/$pattern/) {
+    while ($line =~ $pattern) {
         # $` - everything before the match
         # $& - the matched text
         # $' - everything after the match
@@ -47,7 +51,7 @@ while (my $line = <STDIN>) {
 
 sub print_usage {
     print<<EOT;
-Usage: $0 [--color=COLOR_STRING] <PATTERN>
+Usage: $0 [-i] [--color=COLOR_STRING] <PATTERN>
 
 This is highlight version $VERSION.
 
@@ -57,6 +61,8 @@ specified, it defaults to '$color'.  Colors may be anything that
 Perl's Term::ANSIColor understands.  This program is similar to "grep
 --color PATTERN" except both matching and non-matching lines are
 printed.
+
+Passing -i or --ignore-case will enable case-insensitive matching.
 EOT
 }
 sub print_usage_and_exit {
