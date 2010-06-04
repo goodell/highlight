@@ -13,7 +13,7 @@ use Data::Dumper;
 use Term::ANSIColor qw( colored );
 use Getopt::Long;
 
-my $VERSION = "0.3";
+my $VERSION = "0.4";
 
 my $color = "bold red";
 my $ignore_case = 0;
@@ -51,7 +51,7 @@ while (my $line = <STDIN>) {
 
 sub print_usage {
     print<<EOT;
-Usage: $0 [-i] [--color=COLOR_STRING] <PATTERN>
+Usage: $0 [-i] [--color=COLOR_STRING] [--] <PATTERN>
 
 This is highlight version $VERSION.
 
@@ -63,6 +63,10 @@ Perl's Term::ANSIColor understands.  This program is similar to "grep
 printed.
 
 Passing -i or --ignore-case will enable case-insensitive matching.
+
+If your pattern begins with a dash ('-'), you can pass a '--' argument
+after any options and before your <PATTERN> to distinguish it from an
+option.
 EOT
 }
 sub print_usage_and_exit {
