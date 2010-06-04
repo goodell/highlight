@@ -1,0 +1,15 @@
+#!/usr/bin/env perl
+# removes ANSI escape sequences from (potentially) colorized text
+#
+# see "highlight" script for license (MIT)
+#
+# Author: Dave Goodell <davidjgoodell@gmail.com>
+
+use strict;
+use warnings;
+
+while (my $line = <>) {
+    $line =~ s/\e\[\d*(;\d+)*m//g;
+    print $line;
+}
+
