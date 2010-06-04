@@ -13,9 +13,10 @@ use Data::Dumper;
 use Term::ANSIColor qw( colored );
 use Getopt::Long;
 
-my $VERSION = "0.4";
+my $VERSION = "0.5";
 
-my $color = "bold red";
+my $default_color = "bold red";
+my $color = $default_color;
 my $ignore_case = 0;
 
 GetOptions(
@@ -50,6 +51,7 @@ while (my $line = <STDIN>) {
 ##########################################################################
 
 sub print_usage {
+    my $colored_color = colored($default_color, $default_color);
     print<<EOT;
 Usage: $0 [-i] [--color=COLOR_STRING] [--] <PATTERN>
 
@@ -57,7 +59,7 @@ This is highlight version $VERSION.
 
 This program takes text via standard input and outputs it with the given
 perlre(1) pattern highlighted with the given color.  If no color is
-specified, it defaults to '$color'.  Colors may be anything that
+specified, it defaults to '$colored_color'.  Colors may be anything that
 Perl's Term::ANSIColor understands.  This program is similar to "grep
 --color PATTERN" except both matching and non-matching lines are
 printed.
