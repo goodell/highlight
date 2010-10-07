@@ -1,4 +1,4 @@
-highlight v0.6
+highlight v1.0
 
 Written by Dave Goodell <davidjgoodell@gmail.com>
 MIT License (see "highlight" script)
@@ -14,12 +14,12 @@ not, so such a program is occasionally useful.
 
 ------------------------------------------------------------------------
 
-Usage: ./highlight [-i] [--color=COLOR_STRING] [--] <PATTERN>
+Usage: ./highlight [-i] [--color=COLOR_STRING] [--] <PATTERN0> [PATTERN1...]
 
-This is highlight version 0.6.
+This is highlight version 1.0.
 
 This program takes text via standard input and outputs it with the given
-perlre(1) pattern highlighted with the given color.  If no color option
+perlre(1) pattern(s) highlighted with the given color.  If no color option
 is specified, it defaults to 'bold red'.  Colors may be anything
 that Perl's Term::ANSIColor understands.  This program is similar to
 "grep --color PATTERN" except both matching and non-matching lines are
@@ -31,6 +31,6 @@ variable.  The command-line option takes precedence.
 Passing -i or --ignore-case will enable case-insensitive matching.
 
 If your pattern begins with a dash ('-'), you can pass a '--' argument
-after any options and before your <PATTERN> to distinguish it from an
+after any options and before your pattern to distinguish it from an
 option.
 

@@ -13,7 +13,7 @@ use Data::Dumper;
 use Term::ANSIColor qw( colored );
 use Getopt::Long;
 
-my $VERSION = "0.6";
+my $VERSION = "1.0";
 
 my $default_color = $ENV{"HIGHLIGHT_COLOR"} || "bold red";
 my $color = $default_color;
@@ -27,12 +27,12 @@ GetOptions(
 
 local $| = 1;
 
-if (scalar(@ARGV) != 1) {
+if (scalar(@ARGV) < 1) {
     print_usage();
     die "must pass a pattern, stopped";
 }
 
-my $pattern = $ARGV[0];
+my $pattern = join '|', @ARGV;
 if ($ignore_case) { $pattern = qr/$pattern/oi; }
 else              { $pattern = qr/$pattern/o; }
 
@@ -53,12 +53,12 @@ while (my $line = <STDIN>) {
 sub print_usage {
     my $colored_color = colored($default_color, $default_color);
     print<<EOT;
-Usage: $0 [-i] [--color=COLOR_STRING] [--] <PATTERN>
+Usage: $0 [-i] [--color=COLOR_STRING] [--] <PATTERN0> [PATTERN1...]
 
 This is highlight version $VERSION.
 
 This program takes text via standard input and outputs it with the given
-perlre(1) pattern highlighted with the given color.  If no color option
+perlre(1) pattern(s) highlighted with the given color.  If no color option
 is specified, it defaults to '$colored_color'.  Colors may be anything
 that Perl's Term::ANSIColor understands.  This program is similar to
 "grep --color PATTERN" except both matching and non-matching lines are
@@ -70,8 +70,9 @@ variable.  The command-line option takes precedence.
 Passing -i or --ignore-case will enable case-insensitive matching.
 
 If your pattern begins with a dash ('-'), you can pass a '--' argument
-after any options and before your <PATTERN> to distinguish it from an
+after any options and before your pattern to distinguish it from an
 option.
+
 EOT
 }
 sub print_usage_and_exit {
@@ -79,7 +80,7 @@ sub print_usage_and_exit {
     exit 0;
 }
 
-# Copyright (c) 2009 Dave Goodell
+# Copyright (c) 2009-2010 Dave Goodell
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
