@@ -70,6 +70,21 @@ echo "testing tc6"
 cat tc6.in | ../bleach_text > tc6.out
 diff -q tc6.expected tc6.out || fail "tc6"
 
+# Test a bunch of methods of the --filter syntax
+echo "testing tc7"
+cat tc7.in | ../highlight --f red,light > tc7.out
+diff -q tc7.expected tc7.out || fail "tc7"
+
+# Test a bunch of methods of the --filter syntax
+echo "testing tc8"
+cat tc8.in | ../highlight --filter 'bold green,color' -f ansi11,and > tc8.out
+diff -q tc8.expected tc8.out || fail "tc8"
+
+# Test the numeric version of the filter syntax
+echo "testing tc9"
+cat tc9.in | ../highlight --filter '177,[\.\/-]' > tc9.out
+diff -q tc9.expected tc9.out || fail "tc9"
+
 # TODO add UTF-8 tests and other goodness (probably would fail currently).  See
 # https://github.com/goodell/nowrap/tree/master/tests for some decent unicode
 # text to use in testing.

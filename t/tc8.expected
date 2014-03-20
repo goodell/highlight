@@ -1,0 +1,38 @@
+highlight v1.1
+
+Written by Dave Goodell <davidjgoodell@gmail.com>
+MIT License (see "highlight" script)
+
+The latest version should be available at github:
+
+  http://github.com/goodell/highlight
+
+This package also includes a bonus script ("bleach_text") to strip out
+ANSI [1;32mcolor[0m escape sequences.  The highlight program unconditionally
+[1;32mcolor[0ms text, regardless of whether STDOUT is conncted to a terminal or
+not, so such a program is occasionally useful.
+
+------------------------------------------------------------------------
+
+Usage: ./highlight [-i] [--[1;32mcolor[0m=COLOR_STRING] [--] <PATTERN0> [PATTERN1...]
+  or
+Usage: ./highlight [-i] [--filter PATTERN,COLOR] [--filter PATTERN,COLOR]
+
+This is highlight version 1.1.
+
+This program takes text via st[38;5;11mand[0mard input [38;5;11mand[0m outputs it with the given
+perlre(1) pattern(s) highlighted with the given [1;32mcolor[0m.  If no [1;32mcolor[0m option
+is specified, it defaults to 'bold red'.  Colors may be anything
+that Perl's Term::ANSIColor underst[38;5;11mand[0ms.  This program is similar to
+"grep --[1;32mcolor[0m PATTERN" except both matching [38;5;11mand[0m non-matching lines are
+printed.
+
+The default [1;32mcolor[0m can be selected via the $HIGHLIGHT_COLOR environment
+variable.  The comm[38;5;11mand[0m-line option takes precedence.
+
+Passing -i or --ignore-case will enable case-insensitive matching.
+
+If your pattern begins with a dash ('-'), you can pass a '--' argument
+after any options [38;5;11mand[0m before your pattern to distinguish it from an
+option.
+
