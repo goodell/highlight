@@ -89,6 +89,8 @@ sub print_usage {
     my $colored_color = colored($default_color, $default_color);
     print<<EOT;
 Usage: $0 [-i] [--color=COLOR_STRING] [--] <PATTERN0> [PATTERN1...]
+  or
+Usage: $0 [-i] [--filter Ok,green] [--filter Fail,bright_red]
 
 This is highlight version $VERSION.
 
