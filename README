@@ -16,7 +16,7 @@ not, so such a program is occasionally useful.
 
 Usage: ./highlight [-i] [--color=COLOR_STRING] [--] <PATTERN0> [PATTERN1...]
   or
-Usage: ./highlight [-i] [--filter Ok,green] [--filter Fail,bright_red]
+Usage: ./highlight [-i] [--filter PATTERN,COLOR] [--filter PATTERN,COLOR]
 
 This is highlight version 1.1.
 
