@@ -10,41 +10,76 @@ use strict;
 use warnings;
 
 use Data::Dumper;
-use Term::ANSIColor qw( colored );
+use Term::ANSIColor qw( colored color );
 use Getopt::Long;
 
 my $VERSION = "1.0";
 
 my $default_color = $ENV{"HIGHLIGHT_COLOR"} || "bold red";
-my $color = $default_color;
-my $ignore_case = 0;
+my $color         = $default_color;
+my $ignore_case   = 0;
+my $debug         = 0;
+my @raw_filters   = ();
 
 GetOptions(
     "i|ignore-case" => \$ignore_case,
-    "color=s" => \$color,
-    "help"    => \&print_usage_and_exit,
+    "color=s"       => \$color,
+    "help"          => \&print_usage_and_exit,
+    "filter=s"      => \@raw_filters,
+    "debug"         => \$debug,
 ) or die "unable to parse options, stopped";
+
+my @aggregate_filters = (@ARGV,@raw_filters);
+
+my (@colors,@filters) = ();
+if (@aggregate_filters) {
+    # Build all the filter/color pairs
+    foreach (@aggregate_filters) {
+        my ($filter,$color) = "";
+
+        # If there is a comma it's a filter/color pair
+        if ($_ =~ /(.+?),(.*)/) {
+            $filter = $1;
+            $color  = $2;
+        # It's just a bare word, so it gets the default color
+        } else {
+            $filter = $_;
+            $color  = $default_color;
+        }
+
+        push(@colors,$color);
+        push(@filters,$filter);
+
+        if ($debug) {
+            print "Filter: '$filter' = $color\n";
+        }
+    }
+}
 
 local $| = 1;
 
-if (scalar(@ARGV) < 1) {
+if (!@filters) {
     print_usage();
     die "must pass a pattern, stopped";
 }
 
-my $pattern = join '|', @ARGV;
-if ($ignore_case) { $pattern = qr/$pattern/oi; }
-else              { $pattern = qr/$pattern/o; }
-
 while (my $line = <STDIN>) {
-    # sufficiently fancy values of $pattern might break this
-    while ($line =~ $pattern) {
-        # $` - everything before the match
-        # $& - the matched text
-        # $' - everything after the match
-        print $` . colored($&, $color);
-        $line = $';
+    # Loop through each filter
+    for (my $i = 0; $i < @filters; $i++) {
+        my $f = $filters[$i];
+        my $c = $colors[$i];
+
+        my $color = color($c);
+        my $reset = color('reset');
+
+        # Search for the filter and wrap it in color
+        if ($ignore_case) {
+            $line =~ s/$f/$color$&$reset/ig;
+        } else {
+            $line =~ s/$f/$color$&$reset/g;
+        }
     }
+
     print $line;
 }
 
