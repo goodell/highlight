@@ -1,0 +1,71 @@
+#!/bin/sh
+
+fail() {
+    echo "TEST FAILED: " "$@" | $HIGHLIGHT --color=red '^TEST FAILED'
+    exit 1
+}
+
+allow_time() {
+    (
+        sleep $1
+        if ps $$ > /dev/null ; then
+            # send SIGHUP to runtests script
+            kill -ALRM $$
+            # send SIGHUP to children of runtest
+            pkill -HUP -P $$
+        fi
+    ) &
+}
+
+timeout_handler() {
+    fail "test timed out!  Likely hung..."
+}
+
+if which pkill >/dev/null 2>&1 ; then :
+else
+    echo "this script requires the 'pkill' utility"
+    exit 1
+fi
+
+# allow users to override the highlight executable to be tested, but default to
+# the one in this source tree
+: ${HIGHLIGHT:=../highlight}
+
+# simple test
+echo "testing tc0"
+cat tc0.in | $HIGHLIGHT 'ipsum' > tc0.out
+diff -q tc0.expected tc0.out || fail "tc0"
+
+# check that commas work correctly
+echo "testing tc1"
+cat tc1.in | $HIGHLIGHT 'ipsum,foo' > tc1.out
+diff -q tc1.expected tc1.out || fail "tc1"
+
+# check that more sophisticated patterns work
+echo "testing tc2"
+cat tc2.in | highlight --color=green '(?<=libero)\s+libero' > tc2.out
+diff -q tc2.expected tc2.out || fail "tc2"
+
+# check that case insensitivity works
+echo "testing tc3"
+cat tc3.in | $HIGHLIGHT -c blue -i 'praesent LEO' > tc3.out
+diff -q tc3.expected tc3.out || fail "tc3"
+
+# check that text with existing color doesn't break things
+echo "testing tc4"
+cat tc4.in | $HIGHLIGHT -c red -i 'goodell' > tc4.out
+diff -q tc4.expected tc4.out || fail "tc4"
+
+# make sure that at least simple zero-width patterns don't hang indefinitely
+trap timeout_handler SIGALRM
+allow_time 5
+echo "testing tc5 (with 5 second timeout)"
+cat tc5.in | $HIGHLIGHT '.*' > tc5.out
+diff -q tc5.expected tc5.out || fail "tc5"
+trap '' SIGALRM
+
+# TODO add UTF-8 tests and other goodness (probably would fail currently).  See
+# https://github.com/goodell/nowrap/tree/master/tests for some decent unicode
+# text to use in testing.
+
+echo "ALL TESTS PASSED!" | $HIGHLIGHT --color=green '.+'
