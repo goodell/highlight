@@ -30,6 +30,7 @@ fi
 # allow users to override the highlight executable to be tested, but default to
 # the one in this source tree
 : ${HIGHLIGHT:=../highlight}
+: ${BLEACH_TEXT:=../bleach_text}
 
 # simple test
 echo "testing tc0"
@@ -63,6 +64,11 @@ echo "testing tc5 (with 5 second timeout)"
 cat tc5.in | $HIGHLIGHT '.*' > tc5.out
 diff -q tc5.expected tc5.out || fail "tc5"
 trap '' SIGALRM
+
+# make sure that bleach_text actually strips color escape sequences
+echo "testing tc6"
+cat tc6.in | ../bleach_text > tc6.out
+diff -q tc6.expected tc6.out || fail "tc6"
 
 # TODO add UTF-8 tests and other goodness (probably would fail currently).  See
 # https://github.com/goodell/nowrap/tree/master/tests for some decent unicode

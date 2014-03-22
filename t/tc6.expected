@@ -1,0 +1,30 @@
+fff5a39 thakur 5 days ago  (trunk) try to fix compile errors
+6d4e1f8 thakur 6 days ago  fixed typo
+a50dc20 goodell 7 days ago  eval in the wrappers to expand ${wl} correctly
+bd59380 goodell 7 days ago  avoid rpath usage in the wrappers when building only static libs
+d669f90 goodell 7 days ago  remove "src/include/mpio.h" from BUILT_SOURCES
+0799e47 buntinas 7 days ago  fix acess to uninitialized variable when debugging is enabled.  reviewed by goodell@
+94dbd34 goodell 7 days ago  require autoconf 2.67 or 2.68
+bfa818e goodell 7 days ago  fix a typo in maint/updatefiles
+26bc16e goodell 7 days ago  don't copy AND symlink mpio.h to src/include
+3db0c3c goodell 7 days ago  attempt to make $errnames_txt_files uncondtionally populated
+53a0d1a goodell 7 days ago  fix ch3:sock build
+c80c6e7 buntinas 7 days ago  Fix bug where some collectives were incorectly detected as failed because of an uninitialized tag field in the status
+f849f8e balaji 7 days ago  Get rid of additional statement asking people to see the user guide for more information on mpiexec, when the previous paragraph points them to the wiki link.
+d7db3e1 balaji 8 days ago  Mention the MPI_Alltoall failure as a known issue.
+f70394a balaji 8 days ago  Cleanup the now irrelevant information on --enable-sharedlibs.
+2a29ebb balaji 8 days ago  Got rid of some more unnecessary executable permissions.
+ff0e920 balaji 8 days ago  Remove unnecessary executable permission for Makefile.sm's.
+2b591c4 balaji 9 days ago  Get rid of unnecessary files that configure no longer needs to create.
+a0fc8e9 balaji 9 days ago  Get rid of unnecessary files that are created by autotools and have to be updated everytime we move to a higher version of autotools.
+a79ac78 goodell 10 days ago  and the umpteenth forgotten file is: doc/Makefile.mk
+61aad0f chan 10 days ago  removed unnecessary libtoolize step and its related variable ltdirs.
+ca2703c goodell 10 days ago  revert r9153 now that the docs are buildable again
+848650e goodell 10 days ago  use "perl -p -i -e" instead of "sed -i" in release.pl due to portability issues
+b56f5ba goodell 10 days ago  make the docs buildable again
+716f9be chan 10 days ago  added statement of new features in jumpshot.
+48befdc goodell 10 days ago  add missing test/mpi/f90/Makefile.am
+00babba balaji 10 days ago  Added a comment on ABI for the autotools versions.
+072e7e6 balaji 10 days ago  Check for exact autotools versions for the release tarball. Even though MPICH2 allows higher than required autotools versions, for ABI compatibility we need to force fixed versions for autotools for the releases.
+08112de balaji 10 days ago  Commented out the doc creation for now. Revert this commit once the docs creation is fixed.
+1529877 balaji 10 days ago  Cleanup the release tarball creation script to match the new build system. This is not tested yet, as we need the doc files to work before this can be done.
