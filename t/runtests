@@ -74,4 +74,10 @@ diff -q tc6.expected tc6.out || fail "tc6"
 # https://github.com/goodell/nowrap/tree/master/tests for some decent unicode
 # text to use in testing.
 
+# TODO add miscellaneous other tests for:
+# - patterns with alternation (m/foo|bar/) in them, possibly with multiple patterns as well
+# - patterns that start with "-" (need to pass "--" to highlight)
+# - that $HIGHLIGHT_COLOR is respected
+# - that multiple patterns are supported correctly
+
 echo "ALL TESTS PASSED!" | $HIGHLIGHT --color=green '.+'
