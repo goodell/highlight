@@ -12,6 +12,7 @@ use warnings;
 use Data::Dumper;
 use Term::ANSIColor qw( colored color );
 use Getopt::Long;
+use Scalar::Util qw( looks_like_number );
 
 my $VERSION = "1.1";
 
@@ -72,10 +73,17 @@ while (my $line = <STDIN>) {
 
         # Loop through each filter
         for (my $i = 0; $i < @filters; $i++) {
-            my $f = $filters[$i];
-            my $c = $colors[$i];
+            my $f     = $filters[$i];
+            my $c     = $colors[$i];
+            my $color = '';
 
-            my $color = color($c);
+            # it's a numeric color
+            if (looks_like_number($c)) {
+                $color = numeric_color($c);
+            # It's a word color
+            } else {
+                $color = color($c);
+            }
 
             # Search for the filter and wrap it in color
             if ($ignore_case) {
@@ -142,9 +150,18 @@ option.
 
 EOT
 }
+
 sub print_usage_and_exit {
     print_usage();
     exit 0;
+}
+
+# Set the foreground color
+sub numeric_color {
+    my $c    = shift();
+    my $ret .= "\e[38;5;${c}m";
+
+    return $ret;
 }
 
 # Copyright (c) 2009-2010 Dave Goodell
