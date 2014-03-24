@@ -29,18 +29,16 @@ GetOptions(
     "debug"         => \$debug,
 ) or die "unable to parse options, stopped";
 
-my @aggregate_filters = (@ARGV,@raw_filters);
-
 my (@colors,@filters) = ();
-if (@aggregate_filters) {
+if (@raw_filters) {
     # Build all the filter/color pairs
-    foreach (@aggregate_filters) {
+    foreach (@raw_filters) {
         my ($filter,$color) = "";
 
         # If there is a comma it's a filter/color pair
         if ($_ =~ /(.+?),(.*)/) {
-            $filter = $1;
-            $color  = $2;
+            $color  = $1;
+            $filter = $2;
         # It's just a bare word, so it gets the default color
         } else {
             $filter = $_;
@@ -58,25 +56,57 @@ if (@aggregate_filters) {
 
 local $| = 1;
 
-if (!@filters) {
+if (!@ARGV && !@filters) {
     print_usage();
     die "must pass a pattern, stopped";
 }
 
-while (my $line = <STDIN>) {
-    # Loop through each filter
-    for (my $i = 0; $i < @filters; $i++) {
-        my $f = $filters[$i];
-        my $c = $colors[$i];
+my $pattern = join '|', @ARGV;
+if ($ignore_case) { $pattern = qr/$pattern/oi; }
+else              { $pattern = qr/$pattern/o; }
 
-        my $color = color($c);
+LINE:
+while (my $line = <STDIN>) {
+    if (@filters) {
         my $reset = color('reset');
 
-        # Search for the filter and wrap it in color
-        if ($ignore_case) {
-            $line =~ s/$f/$color$&$reset/ig;
-        } else {
-            $line =~ s/$f/$color$&$reset/g;
+        # Loop through each filter
+        for (my $i = 0; $i < @filters; $i++) {
+            my $f = $filters[$i];
+            my $c = $colors[$i];
+
+            my $color = color($c);
+
+            # Search for the filter and wrap it in color
+            if ($ignore_case) {
+                $line =~ s/$f/$color$&$reset/ig;
+            } else {
+                $line =~ s/$f/$color$&$reset/g;
+            }
+        }
+    } else {
+        # sufficiently fancy values of $pattern might break this
+        while ($line =~ $pattern) {
+            # $` - everything before the match
+            # $& - the matched text
+            # $' - everything after the match
+            if ($& eq '') {
+                # If we hit zero-width and there's no "after", then we can't
+                # just advance a character (the zero-width might
+                # continuously match the empty string).  Advance to the next
+                # line.
+                next LINE unless $';
+
+                # zero-width match hit and we have an "after", advance a
+                # character (this could be very slow, but it should at least
+                # terminate eventually!)
+                print $` . substr($', 0, 1);
+                $line = substr($', 1, length($')-1);
+            }
+            else {
+                print $` . colored($&, $color);
+                $line = $';
+            }
         }
     }
 

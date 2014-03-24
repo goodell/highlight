@@ -1,0 +1,30 @@
+[33mfff5a39[m [34mthakur[m [35m5 days ago[m [31m (trunk)[m try to fix compile errors
+[33m6d4e1f8[m [34mthakur[m [35m6 days ago[m [31m[m fixed typo
+[33ma50dc20[m [34mgoodell[m [35m7 days ago[m [31m[m eval in the wrappers to expand ${wl} correctly
+[33mbd59380[m [34mgoodell[m [35m7 days ago[m [31m[m avoid rpath usage in the wrappers when building only static libs
+[33md669f90[m [34mgoodell[m [35m7 days ago[m [31m[m remove "src/include/mpio.h" from BUILT_SOURCES
+[33m0799e47[m [34mbuntinas[m [35m7 days ago[m [31m[m fix acess to uninitialized variable when debugging is enabled.  reviewed by goodell@
+[33m94dbd34[m [34mgoodell[m [35m7 days ago[m [31m[m require autoconf 2.67 or 2.68
+[33mbfa818e[m [34mgoodell[m [35m7 days ago[m [31m[m fix a typo in maint/updatefiles
+[33m26bc16e[m [34mgoodell[m [35m7 days ago[m [31m[m don't copy AND symlink mpio.h to src/include
+[33m3db0c3c[m [34mgoodell[m [35m7 days ago[m [31m[m attempt to make $errnames_txt_files uncondtionally populated
+[33m53a0d1a[m [34mgoodell[m [35m7 days ago[m [31m[m fix ch3:sock build
+[33mc80c6e7[m [34mbuntinas[m [35m7 days ago[m [31m[m Fix bug where some collectives were incorectly detected as failed because of an uninitialized tag field in the status
+[33mf849f8e[m [34mbalaji[m [35m7 days ago[m [31m[m Get rid of additional statement asking people to see the user guide for more information on mpiexec, when the previous paragraph points them to the wiki link.
+[33md7db3e1[m [34mbalaji[m [35m8 days ago[m [31m[m Mention the MPI_Alltoall failure as a known issue.
+[33mf70394a[m [34mbalaji[m [35m8 days ago[m [31m[m Cleanup the now irrelevant information on --enable-sharedlibs.
+[33m2a29ebb[m [34mbalaji[m [35m8 days ago[m [31m[m Got rid of some more unnecessary executable permissions.
+[33mff0e920[m [34mbalaji[m [35m8 days ago[m [31m[m Remove unnecessary executable permission for Makefile.sm's.
+[33m2b591c4[m [34mbalaji[m [35m9 days ago[m [31m[m Get rid of unnecessary files that configure no longer needs to create.
+[33ma0fc8e9[m [34mbalaji[m [35m9 days ago[m [31m[m Get rid of unnecessary files that are created by autotools and have to be updated everytime we move to a higher version of autotools.
+[33ma79ac78[m [34mgoodell[m [35m10 days ago[m [31m[m and the umpteenth forgotten file is: doc/Makefile.mk
+[33m61aad0f[m [34mchan[m [35m10 days ago[m [31m[m removed unnecessary libtoolize step and its related variable ltdirs.
+[33mca2703c[m [34mgoodell[m [35m10 days ago[m [31m[m revert r9153 now that the docs are buildable again
+[33m848650e[m [34mgoodell[m [35m10 days ago[m [31m[m use "perl -p -i -e" instead of "sed -i" in release.pl due to portability issues
+[33mb56f5ba[m [34mgoodell[m [35m10 days ago[m [31m[m make the docs buildable again
+[33m716f9be[m [34mchan[m [35m10 days ago[m [31m[m added statement of new features in jumpshot.
+[33m48befdc[m [34mgoodell[m [35m10 days ago[m [31m[m add missing test/mpi/f90/Makefile.am
+[33m00babba[m [34mbalaji[m [35m10 days ago[m [31m[m Added a comment on ABI for the autotools versions.
+[33m072e7e6[m [34mbalaji[m [35m10 days ago[m [31m[m Check for exact autotools versions for the release tarball. Even though MPICH2 allows higher than required autotools versions, for ABI compatibility we need to force fixed versions for autotools for the releases.
+[33m08112de[m [34mbalaji[m [35m10 days ago[m [31m[m Commented out the doc creation for now. Revert this commit once the docs creation is fixed.
+[33m1529877[m [34mbalaji[m [35m10 days ago[m [31m[m Cleanup the release tarball creation script to match the new build system. This is not tested yet, as we need the doc files to work before this can be done.
