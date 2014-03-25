@@ -1,3 +1,5 @@
+highlight v1.1
+
 Written by Dave Goodell <davidjgoodell@gmail.com>
 MIT License (see "highlight" script)
 
@@ -16,7 +18,7 @@ Usage: ./highlight [-i] [--color=COLOR_STRING] [--] <PATTERN0> [PATTERN1...]
   or
 Usage: ./highlight [-i] [--filter PATTERN,COLOR] [--filter PATTERN,COLOR]
 
-This is highlight version 1.2.
+This is highlight version 1.1.
 
 This program takes text via standard input and outputs it with the given
 perlre(1) pattern(s) highlighted with the given color.  If no color option

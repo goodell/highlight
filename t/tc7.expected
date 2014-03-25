@@ -1,25 +1,27 @@
+high[31mlight[0m v1.1
+
 Written by Dave Goodell <davidjgoodell@gmail.com>
-MIT License (see "highlight" script)
+MIT License (see "high[31mlight[0m" script)
 
 The latest version should be available at github:
 
-  http://github.com/goodell/highlight
+  http://github.com/goodell/high[31mlight[0m
 
 This package also includes a bonus script ("bleach_text") to strip out
-ANSI color escape sequences.  The highlight program unconditionally
+ANSI color escape sequences.  The high[31mlight[0m program unconditionally
 colors text, regardless of whether STDOUT is conncted to a terminal or
 not, so such a program is occasionally useful.
 
 ------------------------------------------------------------------------
 
-Usage: ./highlight [-i] [--color=COLOR_STRING] [--] <PATTERN0> [PATTERN1...]
+Usage: ./high[31mlight[0m [-i] [--color=COLOR_STRING] [--] <PATTERN0> [PATTERN1...]
   or
-Usage: ./highlight [-i] [--filter PATTERN,COLOR] [--filter PATTERN,COLOR]
+Usage: ./high[31mlight[0m [-i] [--filter PATTERN,COLOR] [--filter PATTERN,COLOR]
 
-This is highlight version 1.2.
+This is high[31mlight[0m version 1.1.
 
 This program takes text via standard input and outputs it with the given
-perlre(1) pattern(s) highlighted with the given color.  If no color option
+perlre(1) pattern(s) high[31mlight[0med with the given color.  If no color option
 is specified, it defaults to 'bold red'.  Colors may be anything
 that Perl's Term::ANSIColor understands.  This program is similar to
 "grep --color PATTERN" except both matching and non-matching lines are

@@ -10,57 +10,120 @@ use strict;
 use warnings;
 
 use Data::Dumper;
-use Term::ANSIColor qw( colored );
+use Term::ANSIColor qw( colored color );
 use Getopt::Long;
+use Scalar::Util qw( looks_like_number );
 
-my $VERSION = "1.1";
+my $VERSION = "1.2";
 
 my $default_color = $ENV{"HIGHLIGHT_COLOR"} || "bold red";
-my $color = $default_color;
-my $ignore_case = 0;
+my $color         = $default_color;
+my $ignore_case   = 0;
+my $debug         = 0;
+my @raw_filters   = ();
 
 GetOptions(
     "i|ignore-case" => \$ignore_case,
-    "color=s" => \$color,
-    "help"    => \&print_usage_and_exit,
+    "color=s"       => \$color,
+    "help"          => \&print_usage_and_exit,
+    "filter=s"      => \@raw_filters,
+    "debug"         => \$debug,
 ) or die "unable to parse options, stopped";
+
+my (@colors,@filters) = ();
+if (@raw_filters) {
+    # Build all the filter/color pairs
+    foreach my $f (@raw_filters) {
+        my ($filter,$color) = "";
+
+        # If there is a comma it's a filter/color pair
+        if ($f =~ /(.+?),(.*)/) {
+            $color  = $1;
+            $filter = $2;
+        # It's just a bare word, so it gets the default color
+        } else {
+            $filter = $f;
+            $color  = $default_color;
+        }
+
+        push(@colors,$color);
+        push(@filters,$filter);
+
+        if ($debug) {
+            print "Filter: '$filter' = $color\n";
+        }
+    }
+}
 
 local $| = 1;
 
-if (scalar(@ARGV) < 1) {
+if (!@ARGV && !@filters) {
     print_usage();
     die "must pass a pattern, stopped";
+}
+
+if (@ARGV && @filters) {
+    print_usage();
+    die "Cannot pass --filter options AND regular options at the same time\n";
 }
 
 my $pattern = join '|', @ARGV;
 if ($ignore_case) { $pattern = qr/$pattern/oi; }
 else              { $pattern = qr/$pattern/o; }
 
+my $reset = color('reset');
+
 LINE:
 while (my $line = <STDIN>) {
-    # sufficiently fancy values of $pattern might break this
-    while ($line =~ $pattern) {
-        # $` - everything before the match
-        # $& - the matched text
-        # $' - everything after the match
-        if ($& eq '') {
-            # If we hit zero-width and there's no "after", then we can't
-            # just advance a character (the zero-width might
-            # continuously match the empty string).  Advance to the next
-            # line.
-            next LINE unless $';
+    if (@filters) {
 
-            # zero-width match hit and we have an "after", advance a
-            # character (this could be very slow, but it should at least
-            # terminate eventually!)
-            print $` . substr($', 0, 1);
-            $line = substr($', 1, length($')-1);
+        # Loop through each filter
+        for (my $i = 0; $i < @filters; $i++) {
+            my $f     = $filters[$i];
+            my $c     = $colors[$i];
+            my $color = '';
+
+            # it's a numeric color
+            if (looks_like_number($c)) {
+                $color = numeric_color($c);
+            # It's a word color
+            } else {
+                $color = color($c);
+            }
+
+            # Search for the filter and wrap it in color
+            if ($ignore_case) {
+                $line =~ s/$f/$color$&$reset/ig;
+            } else {
+                $line =~ s/$f/$color$&$reset/g;
+            }
         }
-        else {
-            print $` . colored($&, $color);
-            $line = $';
+    } else {
+        # sufficiently fancy values of $pattern might break this
+        while ($line =~ $pattern) {
+            # $` - everything before the match
+            # $& - the matched text
+            # $' - everything after the match
+            if ($& eq '') {
+                # If we hit zero-width and there's no "after", then we can't
+                # just advance a character (the zero-width might
+                # continuously match the empty string).  Advance to the next
+                # line.
+                next LINE unless $';
+
+                # zero-width match hit and we have an "after", advance a
+                # character (this could be very slow, but it should at least
+                # terminate eventually!)
+                print $` . substr($', 0, 1);
+                $line = substr($', 1, length($')-1);
+            }
+            else {
+                print $` . colored($&, $color);
+                $line = $';
+            }
         }
     }
+
     print $line;
 }
 
@@ -70,6 +133,8 @@ sub print_usage {
     my $colored_color = colored($default_color, $default_color);
     print<<EOT;
 Usage: $0 [-i] [--color=COLOR_STRING] [--] <PATTERN0> [PATTERN1...]
+  or
+Usage: $0 [-i] [--filter PATTERN,COLOR] [--filter PATTERN,COLOR]
 
 This is highlight version $VERSION.
 
@@ -91,9 +156,18 @@ option.
 
 EOT
 }
+
 sub print_usage_and_exit {
     print_usage();
     exit 0;
+}
+
+# Set the foreground color
+sub numeric_color {
+    my $c    = shift();
+    my $ret .= "\e[38;5;${c}m";
+
+    return $ret;
 }
 
 # Copyright (c) 2009-2010 Dave Goodell
