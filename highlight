@@ -33,16 +33,16 @@ GetOptions(
 my (@colors,@filters) = ();
 if (@raw_filters) {
     # Build all the filter/color pairs
-    foreach (@raw_filters) {
+    foreach my $f (@raw_filters) {
         my ($filter,$color) = "";
 
         # If there is a comma it's a filter/color pair
-        if ($_ =~ /(.+?),(.*)/) {
+        if ($f =~ /(.+?),(.*)/) {
             $color  = $1;
             $filter = $2;
         # It's just a bare word, so it gets the default color
         } else {
-            $filter = $_;
+            $filter = $f;
             $color  = $default_color;
         }
 
@@ -62,14 +62,20 @@ if (!@ARGV && !@filters) {
     die "must pass a pattern, stopped";
 }
 
+if (@ARGV && @filters) {
+    print_usage();
+    die "Cannot pass --filter options AND regular options at the same time\n";
+}
+
 my $pattern = join '|', @ARGV;
 if ($ignore_case) { $pattern = qr/$pattern/oi; }
 else              { $pattern = qr/$pattern/o; }
 
+my $reset = color('reset');
+
 LINE:
 while (my $line = <STDIN>) {
     if (@filters) {
-        my $reset = color('reset');
 
         # Loop through each filter
         for (my $i = 0; $i < @filters; $i++) {
