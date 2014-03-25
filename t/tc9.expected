@@ -1,0 +1,38 @@
+highlight v1[38;5;177m.[0m1
+
+Written by Dave Goodell <davidjgoodell@gmail[38;5;177m.[0mcom>
+MIT License (see "highlight" script)
+
+The latest version should be available at github:
+
+  http:[38;5;177m/[0m[38;5;177m/[0mgithub[38;5;177m.[0mcom[38;5;177m/[0mgoodell[38;5;177m/[0mhighlight
+
+This package also includes a bonus script ("bleach_text") to strip out
+ANSI color escape sequences[38;5;177m.[0m  The highlight program unconditionally
+colors text, regardless of whether STDOUT is conncted to a terminal or
+not, so such a program is occasionally useful[38;5;177m.[0m
+
+[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m[38;5;177m-[0m
+
+Usage: [38;5;177m.[0m[38;5;177m/[0mhighlight [[38;5;177m-[0mi] [[38;5;177m-[0m[38;5;177m-[0mcolor=COLOR_STRING] [[38;5;177m-[0m[38;5;177m-[0m] <PATTERN0> [PATTERN1[38;5;177m.[0m[38;5;177m.[0m[38;5;177m.[0m]
+  or
+Usage: [38;5;177m.[0m[38;5;177m/[0mhighlight [[38;5;177m-[0mi] [[38;5;177m-[0m[38;5;177m-[0mfilter PATTERN,COLOR] [[38;5;177m-[0m[38;5;177m-[0mfilter PATTERN,COLOR]
+
+This is highlight version 1[38;5;177m.[0m1[38;5;177m.[0m
+
+This program takes text via standard input and outputs it with the given
+perlre(1) pattern(s) highlighted with the given color[38;5;177m.[0m  If no color option
+is specified, it defaults to 'bold red'[38;5;177m.[0m  Colors may be anything
+that Perl's Term::ANSIColor understands[38;5;177m.[0m  This program is similar to
+"grep [38;5;177m-[0m[38;5;177m-[0mcolor PATTERN" except both matching and non[38;5;177m-[0mmatching lines are
+printed[38;5;177m.[0m
+
+The default color can be selected via the $HIGHLIGHT_COLOR environment
+variable[38;5;177m.[0m  The command[38;5;177m-[0mline option takes precedence[38;5;177m.[0m
+
+Passing [38;5;177m-[0mi or [38;5;177m-[0m[38;5;177m-[0mignore[38;5;177m-[0mcase will enable case[38;5;177m-[0minsensitive matching[38;5;177m.[0m
+
+If your pattern begins with a dash ('[38;5;177m-[0m'), you can pass a '[38;5;177m-[0m[38;5;177m-[0m' argument
+after any options and before your pattern to distinguish it from an
+option[38;5;177m.[0m
+
