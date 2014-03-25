@@ -14,7 +14,7 @@ use Term::ANSIColor qw( colored color );
 use Getopt::Long;
 use Scalar::Util qw( looks_like_number );
 
-my $VERSION = "1.1";
+my $VERSION = "1.2";
 
 my $default_color = $ENV{"HIGHLIGHT_COLOR"} || "bold red";
 my $color         = $default_color;
