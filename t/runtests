@@ -70,6 +70,32 @@ echo "testing tc6"
 cat tc6.in | ../bleach_text > tc6.out
 diff -q tc6.expected tc6.out || fail "tc6"
 
+# Test a bunch of methods of the --filter syntax
+echo "testing tc7"
+cat tc7.in | $HIGHLIGHT --f red,light > tc7.out
+diff -q tc7.expected tc7.out || fail "tc7"
+
+# DJG: a good test idea, but it requires some newer version of Term::ANSIColor
+# that I don't have on my perl 5.12.4 system in order to know about the
+# "ansiXX" syntax.
+echo "skipping tc8"
+#
+## Test a bunch of methods of the --filter syntax
+##echo "testing tc8"
+##cat tc8.in | $HIGHLIGHT --filter 'bold green,color' -f ansi11,and > tc8.out
+##diff -q tc8.expected tc8.out || fail "tc8"
+
+# Test the numeric version of the filter syntax
+echo "testing tc9"
+cat tc9.in | $HIGHLIGHT --filter '177,[\.\/-]' > tc9.out
+diff -q tc9.expected tc9.out || fail "tc9"
+
+# Alternate version of tc8 that exists to prove that multiple --filter specs
+# work correctly (which is the whole motivation for the feature).
+echo "testing tc10"
+cat tc10.in | $HIGHLIGHT --filter 'bold magenta,aece' -f 'yellow',and > tc10.out
+diff -q tc10.expected tc10.out || fail "tc10"
+
 # TODO add UTF-8 tests and other goodness (probably would fail currently).  See
 # https://github.com/goodell/nowrap/tree/master/tests for some decent unicode
 # text to use in testing.
