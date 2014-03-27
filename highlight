@@ -30,6 +30,7 @@ GetOptions(
     "debug"         => \$debug,
 ) or die "unable to parse options, stopped";
 
+# @colors contains raw ANSI escape sequences
 my (@colors,@filters) = ();
 if (@raw_filters) {
     # Build all the filter/color pairs
@@ -44,6 +45,14 @@ if (@raw_filters) {
         } else {
             $filter = $f;
             $color  = $default_color;
+        }
+
+        # it's a numeric color
+        if (looks_like_number($color)) {
+            $color = numeric_color($color);
+        # It's a word color
+        } else {
+            $color = color($color);
         }
 
         push(@colors,$color);
@@ -76,26 +85,16 @@ my $reset = color('reset');
 LINE:
 while (my $line = <STDIN>) {
     if (@filters) {
-
         # Loop through each filter
         for (my $i = 0; $i < @filters; $i++) {
-            my $f     = $filters[$i];
-            my $c     = $colors[$i];
-            my $color = '';
-
-            # it's a numeric color
-            if (looks_like_number($c)) {
-                $color = numeric_color($c);
-            # It's a word color
-            } else {
-                $color = color($c);
-            }
+            my $f = $filters[$i];
+            my $c = $colors[$i];
 
             # Search for the filter and wrap it in color
             if ($ignore_case) {
-                $line =~ s/$f/$color$&$reset/ig;
+                $line =~ s/$f/$c$&$reset/ig;
             } else {
-                $line =~ s/$f/$color$&$reset/g;
+                $line =~ s/$f/$c$&$reset/g;
             }
         }
     } else {
