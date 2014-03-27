@@ -5,6 +5,9 @@
 # See the bottom of this file for license information (MIT License).
 #
 # Author: Dave Goodell <davidjgoodell@gmail.com>
+#
+# With contributions from:
+# - Scott Baker <scott@perturb.org>
 
 use strict;
 use warnings;
