@@ -136,7 +136,7 @@ sub print_usage {
     print<<EOT;
 Usage: $0 [-i] [--color=COLOR_STRING] [--] <PATTERN0> [PATTERN1...]
   or
-Usage: $0 [-i] [--filter PATTERN,COLOR] [--filter PATTERN,COLOR]
+Usage: $0 [-i] [--filter COLOR,PATTERN] [--filter COLOR,PATTERN] ...
 
 This is highlight version $VERSION.
 
