@@ -33,6 +33,9 @@ GetOptions(
     "debug"         => \$debug,
 ) or die "unable to parse options, stopped";
 
+my @def_colors    = (9,33,11,47,214,99,15); # Red, Blue, Yellow, Green, Orange, Purple, White
+my $def_color_num = 0;
+
 # @colors contains raw ANSI escape sequences
 my (@colors,@filters) = ();
 if (@raw_filters) {
@@ -64,6 +67,19 @@ if (@raw_filters) {
         if ($debug) {
             print "Filter: '$filter' = $color\n";
         }
+    }
+}
+
+foreach my $filter (@ARGV) {
+    my $index_num = $def_color_num++ % scalar(@def_colors);
+    my $cnum      = $def_colors[$index_num];
+    my $color     = numeric_color($cnum);
+
+    push(@colors,$color);
+    push(@filters,$filter);
+
+    if ($debug) {
+        print "Filter: '$filter' = $cnum\n";
     }
 }
 
