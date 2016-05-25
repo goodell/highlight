@@ -1,3 +1,5 @@
+[![Travis CI build status](https://travis-ci.org/goodell/highlight.svg?branch=master)](https://travis-ci.org/goodell/highlight)
+
 Written by Dave Goodell <davidjgoodell@gmail.com>
 MIT License (see "highlight" script)
 
