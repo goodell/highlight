@@ -7,13 +7,14 @@ The latest version should be available at github:
 
   http://github.com/goodell/highlight
 
-This package also includes a bonus script ("bleach_text") to strip out
+This package also includes a bonus script (`bleach_text`) to strip out
 ANSI color escape sequences.  The highlight program unconditionally
-colors text, regardless of whether STDOUT is conncted to a terminal or
+colors text, regardless of whether `STDOUT` is connected to a terminal or
 not, so such a program is occasionally useful.
 
 ------------------------------------------------------------------------
 
+```
 Usage: ./highlight [-i] [--color=COLOR_STRING] [--] <PATTERN0> [PATTERN1...]
   or
 Usage: ./highlight [-i] [--filter COLOR,PATTERN] [--filter COLOR,PATTERN]
@@ -35,4 +36,4 @@ Passing -i or --ignore-case will enable case-insensitive matching.
 If your pattern begins with a dash ('-'), you can pass a '--' argument
 after any options and before your pattern to distinguish it from an
 option.
-
+```
