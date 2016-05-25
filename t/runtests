@@ -44,7 +44,7 @@ diff -q tc1.expected tc1.out || fail "tc1"
 
 # check that more sophisticated patterns work
 echo "testing tc2"
-cat tc2.in | highlight --color=green '(?<=libero)\s+libero' > tc2.out
+cat tc2.in | $HIGHLIGHT --color=green '(?<=libero)\s+libero' > tc2.out
 diff -q tc2.expected tc2.out || fail "tc2"
 
 # check that case insensitivity works
