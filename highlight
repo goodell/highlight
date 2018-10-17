@@ -26,9 +26,10 @@ my $ignore_case   = 1;
 my $debug         = 0;
 my @raw_filters   = ();
 
+my $color_input;
 GetOptions(
     "i|ignore-case" => \$ignore_case,
-    "color=s"       => \$color,
+    "color=s"       => \$color_input,
     "help"          => \&print_usage_and_exit,
     "filter=s"      => \@raw_filters,
     "debug"         => \$debug,
@@ -36,6 +37,13 @@ GetOptions(
 
 my @def_colors    = (33,11,9,47,214,99,15,51,198,94); # Blue, Yellow, Red, Green, Orange, Purple, White, LightBlue, Magenta, Brown
 my $def_color_num = 0;
+
+# Respect manual color overrides in ENV or passed in
+if ($ENV{"HIGHLIGHT_COLOR"}) {
+	@def_colors = ($ENV{"HIGHLIGHT_COLOR"});
+} elsif ($color_input) {
+	@def_colors = $color_input;
+}
 
 # @colors contains raw ANSI escape sequences
 my (@colors,@filters) = ();
