@@ -16,12 +16,13 @@ use Data::Dumper;
 use Term::ANSIColor qw( colored color );
 use Getopt::Long;
 use Scalar::Util qw( looks_like_number );
+#use Data::Dump::Color;
 
 my $VERSION = "1.2";
 
 my $default_color = $ENV{"HIGHLIGHT_COLOR"} || "bold red";
 my $color         = $default_color;
-my $ignore_case   = 0;
+my $ignore_case   = 1;
 my $debug         = 0;
 my @raw_filters   = ();
 
@@ -33,11 +34,12 @@ GetOptions(
     "debug"         => \$debug,
 ) or die "unable to parse options, stopped";
 
-my @def_colors    = (9,33,11,47,214,99,15); # Red, Blue, Yellow, Green, Orange, Purple, White
+my @def_colors    = (33,11,9,47,214,99,15,51,198,94); # Blue, Yellow, Red, Green, Orange, Purple, White, LightBlue, Magenta, Brown
 my $def_color_num = 0;
 
 # @colors contains raw ANSI escape sequences
 my (@colors,@filters) = ();
+
 if (@raw_filters) {
     # Build all the filter/color pairs
     foreach my $f (@raw_filters) {
@@ -71,16 +73,22 @@ if (@raw_filters) {
 }
 
 foreach my $filter (@ARGV) {
-    my $index_num = $def_color_num++ % scalar(@def_colors);
-    my $cnum      = $def_colors[$index_num];
-    my $color     = numeric_color($cnum);
+	my $index_num = $def_color_num++ % scalar(@def_colors);
+	my $cnum      = $def_colors[$index_num];
+	$color        = $cnum;
 
     push(@colors,$color);
     push(@filters,$filter);
 
     if ($debug) {
-        print "Filter: '$filter' = $cnum\n";
+		my $c     = numeric_color($color,1);
+		my $reset = color('reset');
+        print "Filter: '$c$filter$reset' = '$color'\n";
     }
+}
+
+if ($debug) {
+	print "\n";
 }
 
 local $| = 1;
@@ -88,11 +96,6 @@ local $| = 1;
 if (!@ARGV && !@filters) {
     print_usage();
     die "must pass a pattern, stopped";
-}
-
-if (@ARGV && @filters) {
-    print_usage();
-    die "Cannot pass --filter options AND regular options at the same time\n";
 }
 
 my $pattern = join '|', @ARGV;
@@ -103,11 +106,23 @@ my $reset = color('reset');
 
 LINE:
 while (my $line = <STDIN>) {
+	my $bold  = "\e[48;5;m";
+
     if (@filters) {
         # Loop through each filter
         for (my $i = 0; $i < @filters; $i++) {
             my $f = $filters[$i];
             my $c = $colors[$i];
+
+			# It's a number
+			if (is_numeric($c)) {
+				my $bold = 1;
+				$c       = numeric_color($c, $bold);
+			# It's a string
+			} else {
+				$c = color($c);
+			}
+
 
             # Search for the filter and wrap it in color
             if ($ignore_case) {
@@ -180,10 +195,24 @@ sub print_usage_and_exit {
     exit 0;
 }
 
+sub is_numeric {
+	my $f = shift();
+	if ($f =~ /^(\d+\.?\d*|\.\d+)$/) { return 1; }
+
+	return 0;
+}
+
 # Set the foreground color
 sub numeric_color {
     my $c    = shift();
-    my $ret .= "\e[38;5;${c}m";
+	my $bold = shift();
+
+	my $ret;
+	if ($bold) {
+		$ret .= "\e[1;38;5;${c}m";
+	} else {
+		$ret .= "\e[38;5;${c}m";
+	}
 
     return $ret;
 }
