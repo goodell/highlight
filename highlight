@@ -63,14 +63,6 @@ if (@raw_filters) {
             $color  = $default_color;
         }
 
-        # it's a numeric color
-        if (looks_like_number($color)) {
-            $color = numeric_color($color);
-        # It's a word color
-        } else {
-            $color = color($color);
-        }
-
         push(@colors,$color);
         push(@filters,$filter);
 
