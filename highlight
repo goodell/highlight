@@ -187,7 +187,7 @@ is specified, it defaults to a pre-selected array of colors. This program
 is similar to "grep --color PATTERN" except both matching and non-matching
 lines are printed.
 
-Passing --case-sensitive will enable case-sensitive matching. Otherwise
+Passing --case_sensitive will enable case-sensitive matching. Otherwise
 Vim style smartcase matching will be implemented.
 
 If your pattern begins with a dash ('-'), you can pass a '--' argument
