@@ -96,21 +96,6 @@ foreach my $filter (@ARGV) {
     }
 }
 
-# If neither option are passed in we do SmartCase
-if (!defined($case_sensitive) && !defined($case_insensitive)) {
-	$ignore_case = 1; # default to ignore case
-
-	# If we find an uppercase letter do smart case
-	foreach my $f (@filters) {
-		if ($f =~ /[A-Z]/) {
-			$ignore_case = 0;
-			last;
-		}
-	}
-}
-
-#print "Matching case: " . !$ignore_case . "\n";
-
 if ($debug) {
 	print "\n";
 }
@@ -147,6 +132,10 @@ while (my $line = <STDIN>) {
 				$c = color($c);
 			}
 
+			# If we're not FORCING ci or cs then we do SmartCase
+			if (!defined($case_sensitive) && !defined($case_insensitive)) {
+				$ignore_case = int(!has_uppercase($f));
+			}
 
             # Search for the filter and wrap it in color
             if ($ignore_case) {
@@ -235,6 +224,17 @@ sub numeric_color {
 	}
 
     return $ret;
+}
+
+sub has_uppercase {
+	my $str = shift();
+	my $ret = 0;
+
+	if ($str =~ /[A-Z]/) {
+		$ret = 1;
+	}
+
+	return $ret;
 }
 
 # Copyright (c) 2009-2010 Dave Goodell
