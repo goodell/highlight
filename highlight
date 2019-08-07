@@ -1,5 +1,4 @@
 #!/usr/bin/env perl
-# vim: set tw=72 :
 #
 # A simple filter program to decorate patterns with ANSI escape sequences.
 # See the bottom of this file for license information (MIT License).
@@ -16,9 +15,8 @@ use Data::Dumper;
 use Term::ANSIColor qw( colored color );
 use Getopt::Long;
 use Scalar::Util qw( looks_like_number );
-#use Data::Dump::Color;
 
-my $VERSION = "1.2";
+my $VERSION = "1.5";
 
 my $default_color    = $ENV{"HIGHLIGHT_COLOR"} || "bold red";
 my $color            = $default_color;
@@ -259,3 +257,5 @@ sub has_uppercase {
 # WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
+
+# vim: tabstop=4 shiftwidth=4 expandtab autoindent softtabstop=4
