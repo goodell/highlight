@@ -20,19 +20,22 @@ use Scalar::Util qw( looks_like_number );
 
 my $VERSION = "1.2";
 
-my $default_color = $ENV{"HIGHLIGHT_COLOR"} || "bold red";
-my $color         = $default_color;
-my $ignore_case   = 1;
-my $debug         = 0;
-my @raw_filters   = ();
+my $default_color    = $ENV{"HIGHLIGHT_COLOR"} || "bold red";
+my $color            = $default_color;
+my $ignore_case      = 1;
+my $case_sensitive   = undef;
+my $case_insensitive = undef;
+my $debug            = 0;
+my @raw_filters      = ();
 
 my $color_input;
 GetOptions(
-    "i|ignore-case" => \$ignore_case,
-    "color=s"       => \$color_input,
-    "help"          => \&print_usage_and_exit,
-    "filter=s"      => \@raw_filters,
-    "debug"         => \$debug,
+	"case_sensitive"   => \$case_sensitive,
+	"case_insensitive" => \$case_insensitive,
+    "color=s"          => \$color_input,
+    "help"             => \&print_usage_and_exit,
+    "filter=s"         => \@raw_filters,
+    "debug"            => \$debug,
 ) or die "unable to parse options, stopped";
 
 my @def_colors    = (33,11,9,47,214,99,15,51,198,94); # Blue, Yellow, Red, Green, Orange, Purple, White, LightBlue, Magenta, Brown
@@ -86,6 +89,21 @@ foreach my $filter (@ARGV) {
         print "Filter: '$c$filter$reset' = '$color'\n";
     }
 }
+
+# If neither option are passed in we do SmartCase
+if (!defined($case_sensitive) && !defined($case_insensitive)) {
+	$ignore_case = 1; # default to ignore case
+
+	# If we find an uppercase letter do smart case
+	foreach my $f (@filters) {
+		if ($f =~ /[A-Z]/) {
+			$ignore_case = 0;
+			last;
+		}
+	}
+}
+
+#print "Matching case: " . !$ignore_case . "\n";
 
 if ($debug) {
 	print "\n";
@@ -163,25 +181,21 @@ while (my $line = <STDIN>) {
 ##########################################################################
 
 sub print_usage {
-    my $colored_color = colored($default_color, $default_color);
-    print<<EOT;
-Usage: $0 [-i] [--color=COLOR_STRING] [--] <PATTERN0> [PATTERN1...]
+    print <<EOT;
+Usage: $0 <PATTERN0> [PATTERN1...]
   or
-Usage: $0 [-i] [--filter COLOR,PATTERN] [--filter COLOR,PATTERN] ...
+Usage: $0 [--filter COLOR,PATTERN] [--filter COLOR,PATTERN] ...
 
 This is highlight version $VERSION.
 
 This program takes text via standard input and outputs it with the given
-perlre(1) pattern(s) highlighted with the given color.  If no color option
-is specified, it defaults to '$colored_color'.  Colors may be anything
-that Perl's Term::ANSIColor understands.  This program is similar to
-"grep --color PATTERN" except both matching and non-matching lines are
-printed.
+perlre(1) pattern(s) highlighted with various colors.  If no color option
+is specified, it defaults to a pre-selected array of colors. This program
+is similar to "grep --color PATTERN" except both matching and non-matching
+lines are printed.
 
-The default color can be selected via the \$HIGHLIGHT_COLOR environment
-variable.  The command-line option takes precedence.
-
-Passing -i or --ignore-case will enable case-insensitive matching.
+Passing --case-sensitive will enable case-sensitive matching. Otherwise
+Vim style smartcase matching will be implemented.
 
 If your pattern begins with a dash ('-'), you can pass a '--' argument
 after any options and before your pattern to distinguish it from an
