@@ -38,6 +38,12 @@ GetOptions(
     "debug"            => \$debug,
 ) or die "unable to parse options, stopped";
 
+if ($case_sensitive) {
+	$ignore_case = 0;
+} elsif ($case_insensitive) {
+	$ignore_case = 1;
+}
+
 my @def_colors    = (33,11,9,47,214,99,15,51,198,94); # Blue, Yellow, Red, Green, Orange, Purple, White, LightBlue, Magenta, Brown
 my $def_color_num = 0;
 
