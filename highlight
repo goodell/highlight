@@ -14,7 +14,6 @@ use warnings;
 use Data::Dumper;
 use Term::ANSIColor qw( colored color );
 use Getopt::Long;
-use Scalar::Util qw( looks_like_number );
 
 my $VERSION = "1.5";
 
@@ -41,6 +40,7 @@ if ($case_sensitive) {
 
 my @def_colors    = (33,11,9,47,214,99,15,51,198,94); # Blue, Yellow, Red, Green, Orange, Purple, White, LightBlue, Magenta, Brown
 my $def_color_num = 0;
+my $reset         = color('reset');
 
 # Respect manual color overrides in ENV
 if ($ENV{"HIGHLIGHT_COLORS"}) {
@@ -50,6 +50,7 @@ if ($ENV{"HIGHLIGHT_COLORS"}) {
 # @colors contains raw ANSI escape sequences
 my (@colors,@filters);
 
+# These are your "--filter foo --filter bar" type of options
 if (@raw_filters) {
     # Build all the filter/color pairs
     foreach my $f (@raw_filters) {
@@ -77,17 +78,17 @@ if (@raw_filters) {
     }
 }
 
+# These are you bareword options: highlight foo bar
 foreach my $filter (@ARGV) {
+    # Get the next color in the array
 	my $index_num = $def_color_num++ % scalar(@def_colors);
-	my $cnum      = $def_colors[$index_num];
-	$color        = $cnum;
+	$color        = $def_colors[$index_num];
 
     push(@colors,$color);
     push(@filters,$filter);
 
     if ($debug) {
-		my $c     = numeric_color($color,1);
-		my $reset = color('reset');
+		my $c = numeric_color($color,1);
         print "Filter: '$c$filter$reset' = '$color'\n";
     }
 }
@@ -96,8 +97,10 @@ if ($debug) {
 	print "\n";
 }
 
+# Disable output buffering
 local $| = 1;
 
+# Ensure we have at least ONE thing to filter on
 if (!@ARGV && !@filters) {
     print_usage();
     die "must pass a pattern, stopped";
@@ -106,8 +109,6 @@ if (!@ARGV && !@filters) {
 my $pattern = join '|', @ARGV;
 if ($ignore_case) { $pattern = qr/$pattern/oi; }
 else              { $pattern = qr/$pattern/o; }
-
-my $reset = color('reset');
 
 LINE:
 while (my $line = <STDIN>) {
