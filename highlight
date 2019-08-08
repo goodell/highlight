@@ -45,11 +45,9 @@ if ($case_sensitive) {
 my @def_colors    = (33,11,9,47,214,99,15,51,198,94); # Blue, Yellow, Red, Green, Orange, Purple, White, LightBlue, Magenta, Brown
 my $def_color_num = 0;
 
-# Respect manual color overrides in ENV or passed in
-if ($ENV{"HIGHLIGHT_COLOR"}) {
-	@def_colors = ($ENV{"HIGHLIGHT_COLOR"});
-} elsif ($color_input) {
-	@def_colors = $color_input;
+# Respect manual color overrides in ENV
+if ($ENV{"HIGHLIGHT_COLORS"}) {
+	@def_colors = split(/,/,$ENV{"HIGHLIGHT_COLORS"});
 }
 
 # @colors contains raw ANSI escape sequences
