@@ -58,7 +58,7 @@ my (@colors,@filters) = ();
 if (@raw_filters) {
     # Build all the filter/color pairs
     foreach my $f (@raw_filters) {
-        my ($filter,$color) = "";
+        my ($filter,$color);
 
         # If there is a comma it's a filter/color pair
         if ($f =~ /(.+?),(.*)/) {
@@ -67,7 +67,10 @@ if (@raw_filters) {
         # It's just a bare word, so it gets the default color
         } else {
             $filter = $f;
-            $color  = $default_color;
+
+            # Get the next color in the color array
+            my $index_num = $def_color_num++ % scalar(@def_colors);
+            $color        = $def_colors[$index_num];
         }
 
         push(@colors,$color);
