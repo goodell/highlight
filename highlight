@@ -27,9 +27,9 @@ my $color;
 GetOptions(
 	"case_sensitive"   => \$case_sensitive,
 	"case_insensitive" => \$case_insensitive,
-    "help"             => \&print_usage_and_exit,
-    "filter=s"         => \@raw_filters,
-    "debug"            => \$debug,
+	"help"             => \&print_usage_and_exit,
+	"filter=s"         => \@raw_filters,
+	"debug"            => \$debug,
 ) or die "unable to parse options, stopped";
 
 if ($case_sensitive) {
@@ -52,45 +52,45 @@ my (@colors,@filters);
 
 # These are your "--filter foo --filter bar" type of options
 if (@raw_filters) {
-    # Build all the filter/color pairs
-    foreach my $f (@raw_filters) {
-        my ($filter,$color);
+	# Build all the filter/color pairs
+	foreach my $f (@raw_filters) {
+		my ($filter,$color);
 
-        # If there is a comma it's a filter/color pair
-        if ($f =~ /(.+?),(.*)/) {
-            $color  = $1;
-            $filter = $2;
-        # It's just a bare word, so it gets the default color
-        } else {
-            $filter = $f;
+		# If there is a comma it's a filter/color pair
+		if ($f =~ /(.+?),(.*)/) {
+			$color  = $1;
+			$filter = $2;
+			# It's just a bare word, so it gets the default color
+		} else {
+			$filter = $f;
 
-            # Get the next color in the color array
-            my $index_num = $def_color_num++ % scalar(@def_colors);
-            $color        = $def_colors[$index_num];
-        }
+			# Get the next color in the color array
+			my $index_num = $def_color_num++ % scalar(@def_colors);
+			$color        = $def_colors[$index_num];
+		}
 
-        push(@colors,$color);
-        push(@filters,$filter);
+		push(@colors,$color);
+		push(@filters,$filter);
 
-        if ($debug) {
-            print "Filter: '$filter' = $color\n";
-        }
-    }
+		if ($debug) {
+			print "Filter: '$filter' = $color\n";
+		}
+	}
 }
 
 # These are you bareword options: highlight foo bar
 foreach my $filter (@ARGV) {
-    # Get the next color in the array
+	# Get the next color in the array
 	my $index_num = $def_color_num++ % scalar(@def_colors);
 	$color        = $def_colors[$index_num];
 
-    push(@colors,$color);
-    push(@filters,$filter);
+	push(@colors,$color);
+	push(@filters,$filter);
 
-    if ($debug) {
+	if ($debug) {
 		my $c = numeric_color($color,1);
-        print "Filter: '$c$filter$reset' = '$color'\n";
-    }
+		print "Filter: '$c$filter$reset' = '$color'\n";
+	}
 }
 
 if ($debug) {
@@ -102,8 +102,8 @@ local $| = 1;
 
 # Ensure we have at least ONE thing to filter on
 if (!@ARGV && !@filters) {
-    print_usage();
-    die "must pass a pattern, stopped";
+	print_usage();
+	die "must pass a pattern, stopped";
 }
 
 my $pattern = join '|', @ARGV;
@@ -114,17 +114,17 @@ LINE:
 while (my $line = <STDIN>) {
 	my $bold  = "\e[48;5;m";
 
-    if (@filters) {
-        # Loop through each filter
-        for (my $i = 0; $i < @filters; $i++) {
-            my $f = $filters[$i];
-            my $c = $colors[$i];
+	if (@filters) {
+		# Loop through each filter
+		for (my $i = 0; $i < @filters; $i++) {
+			my $f = $filters[$i];
+			my $c = $colors[$i];
 
 			# It's a number
 			if (is_numeric($c)) {
 				my $bold = 1;
 				$c       = numeric_color($c, $bold);
-			# It's a string
+				# It's a string
 			} else {
 				$c = color($c);
 			}
@@ -134,40 +134,40 @@ while (my $line = <STDIN>) {
 				$ignore_case = int(!has_uppercase($f));
 			}
 
-            # Search for the filter and wrap it in color
-            if ($ignore_case) {
-                $line =~ s/$f/$c$&$reset/ig;
-            } else {
-                $line =~ s/$f/$c$&$reset/g;
-            }
-        }
-    } else {
-        # sufficiently fancy values of $pattern might break this
-        while ($line =~ $pattern) {
-            # $` - everything before the match
-            # $& - the matched text
-            # $' - everything after the match
-            if ($& eq '') {
-                # If we hit zero-width and there's no "after", then we can't
-                # just advance a character (the zero-width might
-                # continuously match the empty string).  Advance to the next
-                # line.
-                next LINE unless $';
+			# Search for the filter and wrap it in color
+			if ($ignore_case) {
+				$line =~ s/$f/$c$&$reset/ig;
+			} else {
+				$line =~ s/$f/$c$&$reset/g;
+			}
+		}
+	} else {
+		# sufficiently fancy values of $pattern might break this
+		while ($line =~ $pattern) {
+			# $` - everything before the match
+			# $& - the matched text
+			# $' - everything after the match
+			if ($& eq '') {
+				# If we hit zero-width and there's no "after", then we can't
+				# just advance a character (the zero-width might
+				# continuously match the empty string).  Advance to the next
+				# line.
+				next LINE unless $';
 
-                # zero-width match hit and we have an "after", advance a
-                # character (this could be very slow, but it should at least
-                # terminate eventually!)
-                print $` . substr($', 0, 1);
-                $line = substr($', 1, length($')-1);
-            }
-            else {
-                print $` . colored($&, $color);
-                $line = $';
-            }
-        }
-    }
+				# zero-width match hit and we have an "after", advance a
+				# character (this could be very slow, but it should at least
+				# terminate eventually!)
+				print $` . substr($', 0, 1);
+				$line = substr($', 1, length($')-1);
+			}
+			else {
+				print $` . colored($&, $color);
+				$line = $';
+			}
+		}
+	}
 
-    print $line;
+	print $line;
 }
 
 ##########################################################################
@@ -197,8 +197,8 @@ EOT
 }
 
 sub print_usage_and_exit {
-    print_usage();
-    exit 0;
+	print_usage();
+	exit 0;
 }
 
 sub is_numeric {
@@ -210,7 +210,7 @@ sub is_numeric {
 
 # Set the foreground color
 sub numeric_color {
-    my $c    = shift();
+	my $c    = shift();
 	my $bold = shift();
 
 	my $ret;
@@ -220,7 +220,7 @@ sub numeric_color {
 		$ret .= "\e[38;5;${c}m";
 	}
 
-    return $ret;
+	return $ret;
 }
 
 sub has_uppercase {
@@ -234,4 +234,4 @@ sub has_uppercase {
 	return $ret;
 }
 
-# vim: tabstop=4 shiftwidth=4 expandtab autoindent softtabstop=4
+# vim: tabstop=4 shiftwidth=4 autoindent softtabstop=4
