@@ -50,7 +50,7 @@ if ($ENV{"HIGHLIGHT_COLORS"}) {
 # @colors contains raw ANSI escape sequences
 my (@colors,@filters);
 
-# These are your "--filter foo --filter bar" type of options
+# These are "--filter foo --filter bar" type of options
 if (@raw_filters) {
 	# Build all the filter/color pairs
 	foreach my $f (@raw_filters) {
@@ -71,14 +71,10 @@ if (@raw_filters) {
 
 		push(@colors,$color);
 		push(@filters,$filter);
-
-		if ($debug) {
-			print "Filter: '$filter' = $color\n";
-		}
 	}
 }
 
-# These are you bareword options: highlight foo bar
+# These are bareword options: highlight foo bar
 foreach my $filter (@ARGV) {
 	# Get the next color in the array
 	my $index_num = $def_color_num++ % scalar(@def_colors);
@@ -86,14 +82,17 @@ foreach my $filter (@ARGV) {
 
 	push(@colors,$color);
 	push(@filters,$filter);
-
-	if ($debug) {
-		my $c = numeric_color($color,1);
-		print "Filter: '$c$filter$reset' = '$color'\n";
-	}
 }
 
 if ($debug) {
+	for (my $i = 0; $i < @filters; $i++) {
+		my $color  = $colors[$i];
+		my $filter = $filters[$i];
+
+		my $c = numeric_color($color,1);
+		print "Filter: '$c$filter$reset' = '$color'\n";
+	}
+
 	print "\n";
 }
 
