@@ -85,12 +85,15 @@ foreach my $filter (@ARGV) {
 }
 
 if ($debug) {
+	my $length = longest_word(@filters);
+	$length += 2; # We add two because we '' the filter below and it makes the string longer
+
 	for (my $i = 0; $i < @filters; $i++) {
 		my $color  = $colors[$i];
 		my $filter = $filters[$i];
 
 		my $c = numeric_color($color,1);
-		print "Filter: '$c$filter$reset' = '$color'\n";
+		printf("Filter: $c%${length}s$reset = '$color'\n", "'$filter'");
 	}
 
 	print "\n";
@@ -231,6 +234,21 @@ sub has_uppercase {
 	}
 
 	return $ret;
+}
+
+sub longest_word {
+	my @arr     = @_;
+	my $longest = 0;
+
+	foreach my $word (@arr) {
+		my $len = length($word);
+
+		if ($len > $longest) {
+			$longest = $len;
+		}
+	}
+
+	return $longest;
 }
 
 # vim: tabstop=4 shiftwidth=4 autoindent softtabstop=4
